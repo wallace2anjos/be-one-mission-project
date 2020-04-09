@@ -1,3 +1,12 @@
+// listen for auth status changes
+auth.onAuthStateChanged(user => {
+  if (user) {
+    console.log(`user logged in: `, user)
+  } else {
+    console.log(`user logged out: `)
+  }
+});
+
 // singup
 const signupForm = document.querySelector(`#signup-form`);
 signupForm.addEventListener(`submit`, (e) => {
@@ -22,9 +31,7 @@ signupForm.addEventListener(`submit`, (e) => {
 const logout = document.querySelector(`#logout`);
 logout.addEventListener(`click`,(e) => {
   e.preventDefault();
-  auth.signOut().then(() => {
-    console.log(`user logged out`);
-  });
+  auth.signOut();
 });
 
 // login
@@ -37,6 +44,7 @@ loginForm.addEventListener(`submit`, (e) =>{
   const password = loginForm[`login-password`].value;
 
   auth.signInWithEmailAndPassword(email, password).catch(function(error){
+    
     //handle errors here
     var errorCode = error.code;
     var errorMessage = error.message;
@@ -47,21 +55,10 @@ loginForm.addEventListener(`submit`, (e) =>{
       alert(errorMessage + ` User dont exist`);
     }
   console.log(error);
-  }).then(cred => {
-    console.log(cred.user);
-    console.log(`user logged in`);
-    //close the login modal and reset form
-    const modal = document.querySelector(`#modal-login`);
-    M.Modal.getInstance(modal).close();
-    loginForm.reset();
-  })
-  /*
-  auth.signInWithEmailAndPassword(email, password).then(cred => {
-    console.log(cred.user);
-    console.log(`user logged in`);
-    //close the login modal and reset form fields
-    const modal = document.querySelector(`#modal-login`);
-    M.Modal.getInstance(modal).close();
-    loginForm.reset();
-  });*/
+  });
+
+  //close the login modal and reset form
+  const modal = document.querySelector(`#modal-login`);
+  M.Modal.getInstance(modal).close();
+  loginForm.reset();
 });
